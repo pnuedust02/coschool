@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>핀테크 및 IT/데이터/경영 용어 사전</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font setting for clean Korean display -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700&display=swap');
+        body {
+            font-family: 'Noto Sans KR', 'Inter', sans-serif;
+            background-color: #f8fafc; /* Blue Gray 50 */
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <div id="app" class="max-w-4xl mx-auto p-4 sm:p-6 lg:p-8">
+
+        <!-- Header -->
+        <header class="text-center mb-10 relative">
+            <!-- Home Link Added -->
+            <a href="index.html" class="absolute top-0 left-0 bg-indigo-600 text-white px-4 py-2 rounded-lg font-bold hover:bg-indigo-700 transition duration-150 shadow-lg text-sm flex items-center space-x-1">
+                <span role="img" aria-label="home">🏠</span> <span>홈</span>
+            </a>
+            
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-2">
+                핀테크 및 주요 용어 사전
+            </h1>
+            <p class="text-lg text-gray-600">
+                IT, 데이터, 경영 핵심 용어를 쉽게 검색하고 확인하세요.
+            </p>
+        </header>
+
+        <!-- Search and Filter Controls -->
+        <div class="space-y-4 mb-8 sticky top-0 bg-white pt-4 z-10 rounded-xl shadow-lg p-4">
+            <!-- Search Input -->
+            <div>
+                <input type="text" id="search-input" placeholder="용어 또는 설명을 검색하세요 (예: ESG, 핀테크, AI)"
+                       class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 shadow-sm text-base">
+            </div>
+
+            <!-- Category Filters -->
+            <div id="category-filters" class="flex flex-wrap gap-2 text-sm justify-center">
+                <!-- Buttons will be dynamically generated here -->
+                <button data-category="전체" class="category-btn bg-indigo-600 text-white px-4 py-2 rounded-full font-medium transition duration-200 shadow-md hover:bg-indigo-700">
+                    전체
+                </button>
+            </div>
+        </div>
+
+        <!-- Glossary Container -->
+        <div id="glossary-container" class="space-y-6">
+            <!-- Glossary items will be dynamically rendered here -->
+            <div class="text-center text-gray-500 p-8" id="loading-indicator">데이터를 불러오는 중...</div>
+        </div>
+
+    </div>
+
+    <script>
+        // 용어 설명에서 [숫자] 형태의 출처 표기를 제거한 클린 데이터
+        const rawGlossaryData = [
+            // 금융/핀테크
+            { category: "금융/핀테크", term: "핀테크 (Fintech)", description: "금융(finance)과 기술(technology)의 융복합(convergence)을 의미한다. 기존 금융 서비스에 IT를 결합하는 핀테크 1.0(간편결제, 송금 등)에서 혁신 기술과 협업하여 새로운 비즈니스 모델을 구축하는 핀테크 2.0(인터넷전문은행, 크라우드펀딩, 로보어드바이저 등)으로 진화했다." },
+            { category: "금융/핀테크", term: "테크핀 (Techfin)", description: "정보기술(IT)을 기반으로 새로운 금융 서비스를 결합하는 포괄적 개념이며, 더 나은 금융 서비스를 제공하기 위해 IT 기술을 접목하는 기업을 통칭한다." },
+            { category: "금융/핀테크", term: "인터넷 전문은행", description: "정보통신기술(ICT)과 금융분야의 핫 이슈였으며, 비대면 인증 방식을 사용하고, 낮은 수수료 및 대출조건 완화(중신용자 저금리 대출)를 통해 소비자 편익을 증대하는 무점포 은행이다." },
+            { category: "금융/핀테크", term: "간편결제 시스템", description: "사용자들이 온라인 및 오프라인에서 신속하고 쉽게 결제할 수 있도록 지원하는 전자 결제 방식이다. 암호화 기술과 인증 시스템을 통해 높은 보안성을 제공하며, 카카오pay, 네이버pay 등이 있다." },
+            { category: "금융/핀테크", term: "로보어드바이저 (Robo-Adviser)", description: "빅데이터와 인공지능 알고리즘을 기반으로 고객에게 온라인으로 자산배분 포트폴리오를 관리해주는 금융자문 서비스이다. 인간의 주관적 판단 없이 수학적 규칙이나 알고리즘을 이용하며, 기존 투자 서비스 대비 낮은 수수료와 ETF를 활용한 분산투자가 특징이다." },
+            { category: "금융/핀테크", term: "인슈어테크 (InsurTech)", description: "보험(Insurance)과 기술(Technology)의 합성어이다. AI, 빅데이터, 블록체인 등의 기술을 활용하여 보험 산업의 효율성과 고객 경험을 향상시키는 것을 목표로 한다." },
+            { category: "금융/핀테크", term: "P2P 금융 플랫폼 (Peer to Peer)", description: "금융회사의 중개 없이 사적 개인 간에 금융거래가 체결될 수 있도록 중개하는 금융 플랫폼이다. 대출, 지급결제, 크라우드펀딩, 보험 분야에서 활용된다." },
+            { category: "금융/핀테크", term: "오픈 뱅킹 (Open Banking)", description: "금융 데이터와 서비스를 안전하게 공유할 수 있도록 개방된 표준을 통해 금융기관과 제3자 간의 협력을 촉진하는 시스템이다. API를 활용하며, 코어뱅킹 서비스(예금계좌 개설 및 지급결제)만을 제공하고 제3자의 금융서비스를 리번들링하여 제공한다." },
+            { category: "금융/핀테크", term: "마이데이터 (MyData)", description: "데이터 관리와 활용 권한이 정보 주체인 개인에게 있음을 강조한다. 금융권뿐만 아니라 통신사, 공공기관 등 흩어진 개인 데이터를 통합하여 맞춤형 상품 추천 및 재무 컨설팅을 지원한다." },
+
+            // 4차 산업혁명/IT
+            { category: "4차 산업혁명/IT", term: "4차 산업혁명", description: "빅데이터 기반의 디지털 전환이며, 가상세계와 현실세계의 융복합을 통한 새로운 가치 창출이 핵심이다." },
+            { category: "4차 산업혁명/IT", term: "디지털 전환 (DT/DX)", description: "디지털과 물리적 요소들의 통합을 통해 비즈니스 모델을 변화하고 새롭게 정립하는 과정이며, 아날로그 형식의 정보와 문서를 디지털 형식으로 변환하는 활동이다." },
+            { category: "4차 산업혁명/IT", term: "디지로그 (Digilog)", description: "디지털 기술에 아날로그 감성(인간의 감각)을 결합하여 제공되는 제품 및 서비스로, 기술과 감성의 공존을 뜻한다." },
+            { category: "4차 산업혁명/IT", term: "DNA", description: "4차 산업혁명의 핵심 키워드 압축어로, Big Data, Network, AI를 의미한다." },
+            { category: "4차 산업혁명/IT", term: "ABC", description: "4차 산업혁명의 핵심 키워드 압축어로, AI, Big data, Cloud computing을 의미한다." },
+            { category: "4차 산업혁명/IT", term: "CPS (Cyber Physical System)", description: "컴퓨팅과 물리세계가 융합되어 자동화, 지능화를 이루는 시스템으로, 현실세계와 디지털 사이버세계가 긴밀하게 결합된 것이다." },
+            { category: "4차 산업혁명/IT", term: "O2O (On-line to Off-line)", description: "오프라인에서 온라인으로 전환을 유도하는 전략이다." },
+            { category: "4차 산업혁명/IT", term: "O4O (On-line for Off-line)", description: "온라인에 축적된 데이터를 활용하여 오프라인에서 새로운 비즈니스 모델로 적용하는 것을 의미한다." },
+            { category: "4차 산업혁명/IT", term: "디지털 트윈 (Digital Twin)", description: "라이프사이클 전반에 걸쳐 실시간 데이터를 사용하여 업데이트되며, 시뮬레이션, 머신러닝, 추론을 통하여 의사결정을 돕는 시스템의 가상 모델이다." },
+            { category: "4차 산업혁명/IT", term: "캄테크 (Calm-Tech)", description: "사람들이 인지하지 못한 상태에서 AI 및 IoT 기술로 서비스를 제공하는 현상을 지칭하며, 보이지 않는 배려 기술을 뜻한다." },
+            { category: "4차 산업혁명/IT", term: "Web 3.0", description: "공정, 자율을 지향하며 탈중앙화된 분산형 웹 표준이다. Semantic 기술을 기반으로 하며 지능화된 웹을 통해 개인 맞춤형 콘텐츠 제공이 가능하다." },
+            { category: "4차 산업혁명/IT", term: "클라우드 컴퓨팅", description: "인터넷상의 클라우드(컴퓨팅 사업자 중앙 서버)를 통해 H/W, S/W 등의 컴퓨팅 자원을 누구나 필요한 만큼 빌려 쓰고 사용한 만큼 요금을 지급하는 방식의 서비스이다." },
+            { category: "4차 산업혁명/IT", term: "SaaS / PaaS / IaaS", description: "클라우드 컴퓨팅 서비스 모델의 종류이다. SaaS는 인터넷으로 S/W 서비스를 제공받는 것이고, PaaS는 개발 실행을 위한 플랫폼을, IaaS는 서버, 스토리지 등 시스템 자원을 제공한다." },
+
+            // 데이터/지식
+            { category: "데이터/지식", term: "데이터 (Data)", description: "의미 있는 단순한 사실들의 집합이다." },
+            { category: "데이터/지식", term: "정보 (Information)", description: "해석할 수 있는 의미와 가치를 가진 자료이다." },
+            { category: "데이터/지식", term: "빅데이터 (Big Data)", description: "정형, 반정형, 비정형 데이터 모두를 포함하여, 일상적으로 비즈니스에 영향을 미치는 대용량 데이터를 지칭한다. 특징은 5V (Volume, Velocity, Variety, Value, Variable)로 설명된다." },
+            { category: "데이터/지식", term: "정형 데이터", description: "일정한 규칙에 따라 체계적으로 정리된 데이터 (예: Excel, 통계자료)이다." },
+            { category: "데이터/지식", term: "비정형 데이터", description: "일정한 규칙이나 체계가 없는 데이터 (예: 그림, 동영상, SNS 게시글)이다." },
+            { category: "데이터/지식", term: "메타데이터 (Metadata)", description: "데이터에 대한 정보를 담고 있는 데이터 (파일의 위치, 크기, 소유자, 허가권 등)를 지칭한다." },
+            { category: "데이터/지식", term: "형식지 (Explicit knowledge)", description: "언어로 명시할 수 있는 객관적이고 형식적인 지식 (예: 문서, 데이터 정책, 절차)이다." },
+            { category: "데이터/지식", term: "암묵지 (Tacit knowledge)", description: "개인적인 경험에 의해 얻어지는, 말로 표현하기 어려운 함축적 지식이다." },
+
+            // AI/머신러닝
+            { category: "AI/머신러닝", term: "AI (Artificial Intelligence, 인공지능)", description: "컴퓨터 프로그램이 인간의 학습능력, 판단 능력, 추론, 지각 능력 등 지적인 능력을 구현한 기술 분야이다." },
+            { category: "AI/머신러닝", term: "머신러닝 (Machine Learning, ML)", description: "데이터를 기반으로 패턴을 학습하고 예측을 수행하며, 인간의 학습능력과 같은 기능을 컴퓨터에 부여하기 위한 기술이다." },
+            { category: "AI/머신러닝", term: "지도 학습 (Supervised Learning)", description: "정답이 있는 데이터로 학습하여 데이터 분류나 올바른 결과를 예측하는 방식이다." },
+            { category: "AI/머신러닝", term: "비지도 학습 (Unsupervised Learning)", description: "정답이 없는 데이터로 데이터의 유의미한 패턴이나 구조를 발견하는 방식이다." },
+            { category: "AI/머신러닝", term: "생성형 AI (Generative AI)", description: "챗GPT와 같이 몇 가지 원리로 문장을 만들어 내는 능력을 지칭하며, 실시간 딥러닝 기반 대화형 인공지능 챗봇 기술이다." },
+            { category: "AI/머신러닝", term: "ChatGPT", description: "실시간 딥러닝 기반 대화형 인공지능 챗봇으로, 사용자와 주고받는 대화에서 질문에 답하도록 설계된 자연어 처리 모델이다." },
+            { category: "AI/머신러닝", term: "챗봇 (Chatbot)", description: "자연어 처리(NLP) 기술을 이용해 사람과 대화할 수 있는 소프트웨어 애플리케이션이다. 규칙 기반과 AI 기반 챗봇으로 유형이 나뉜다." },
+
+            // 경영/사회
+            { category: "경영/사회", term: "CSR (기업의 사회적 책임)", description: "기업 수익의 일부를 사회에 환원하는 자선 활동과 같은 선행 형태로 진행되는 개념이다." },
+            { category: "경영/사회", term: "CSV (공유 가치 창출)", description: "사회적 문제 해결을 통해 사회적 가치와 경제적 가치를 창출하여 기업 이익의 동반 성장을 유도하는 경영철학이다." },
+            { category: "경영/사회", term: "ESG", description: "환경적 요인(E), 사회적 책임(S), 투명 경영(G)을 의미하며, CSR과 CSV의 확장 개념으로써 더 이상 선택이 아닌 필수 요인으로 자리매김 중이다." },
+            { category: "경영/사회", term: "ESS (중역지원시스템)", description: "판단, 평가, 통찰력이 절대적으로 요구되는 비일상적인 의사결정(최고경영자 의사결정)을 지원하는 IT 솔루션이다." },
+            { category: "경영/사회", term: "DSS (의사결정지원시스템)", description: "비일상적인 의사결정을 지원하는 IT 솔루션이다." },
+            { category: "경영/사회", term: "CRM (고객관계관리)", description: "고객과의 관계를 구축하고 유지하며, 이를 통해 비즈니스 성과를 향상시키는 전략적 접근법이다." },
+            { category: "경영/사회", term: "PPS (Pain Point Seeker)", description: "고객이 상품이나 제품을 사용하는 과정에서 느끼는 불평, 불만, 스트레스를 유발하는 문제를 찾아내는 것이다." },
+
+            // 소비/트렌드
+            { category: "소비/트렌드", term: "알파 세대", description: "2010년~2024년생으로 추산되며, 순수 Digital Native 세대로 소비 지형을 바꿀 주역이다." },
+            { category: "소비/트렌드", term: "욜로 (YOLO)", description: "You Only Live Once의 약자로, 현재 이 순간을 사랑하려는 긍정적인 소비 태도이다 (2017년 주요 키워드)." },
+            { category: "소비/트렌드", term: "뉴트로 (New-tro)", description: "새로운 복고(New-retro)를 뜻하며, 옛날 감성과 더불어 현대적 아이템의 가치를 부여하는 현상이다 (2019년 주요 키워드)." },
+            { category: "소비/트렌드", term: "온택트 (Ontact)", description: "Online + Untact의 합성어로, 팬데믹 시대 온라인을 통한 비대면 시장 활성화를 뜻하는 개념이다 (2021년 주요 키워드)." },
+            { category: "소비/트렌드", term: "페르소나 (Persona)", description: "복수의 가면을 뜻하며, 양면적 소비 행태를 통해 초개인화되는 현상으로 고객 세분화 및 맞춤화 전략에 필요하다 (2020년 주요 키워드)." },
+            { category: "소비/트렌드", term: "나노 사회", description: "극소 단위로 파편화된 사회 변화를 뜻하며, 개인화되는 메가트렌드에 팬데믹으로 인한 사회적 거리두기가 가속화된 현상이다." },
+            { category: "소비/트렌드", term: "디깅 모멘텀 (Digging Momentum)", description: "파고, 또 파고, 끝까지 파고 들어가 행복한 ‘과몰입’을 즐기는 사람들이다." },
+            { category: "소비/트렌드", term: "체리슈머 (Cherry-sumers)", description: "한정된 자원을 극대화하기 위해 최대한 알뜰하게 소비하는 전략적 소비자를 지칭한다." },
+            { category: "소비/트렌드", term: "편리미엄", description: "편리한 것이 곧 프리미엄한 것(가성비 → 프리미엄)이라는 개념으로, 고객의 사소한 불편함 해소에서 기회를 찾는 것이다." },
+            { category: "소비/트렌드", term: "득템력 (Gotcha Power)", description: "경제적 지불 능력만으로 얻을 수 없는 희소한 상품을 얻을 수 있는 소비자의 능력을 의미한다." },
+            { category: "소비/트렌드", term: "소확행", description: "소소하지만 확실한 행복을 추구하는 성향에 맞도록 서비스를 제공해야 할 필요성이 있다 (2018년 주요 키워드)." }
+        ];
+
+        const glossaryContainer = document.getElementById('glossary-container');
+        const searchInput = document.getElementById('search-input');
+        const categoryFilters = document.getElementById('category-filters');
+
+        let currentFilter = '전체';
+
+        // 데이터를 카테고리별로 그룹화
+        function groupDataByCategory(data) {
+            return data.reduce((acc, item) => {
+                if (!acc[item.category]) {
+                    acc[item.category] = [];
+                }
+                acc[item.category].push(item);
+                return acc;
+            }, {});
+        }
+
+        // 용어 항목 HTML 생성
+        function createGlossaryItemHTML(item) {
+            return `
+                <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition duration-300 ease-in-out">
+                    <h3 class="text-xl font-bold text-indigo-700 mb-2">${item.term}</h3>
+                    <p class="text-sm font-medium text-indigo-500 mb-3">${item.category}</p>
+                    <p class="text-gray-700 leading-relaxed">${item.description}</p>
+                </div>
+            `;
+        }
+
+        // 전체 용어 목록 렌더링
+        function renderGlossary(filter = '전체', searchTerm = '') {
+            glossaryContainer.innerHTML = '';
+            
+            let filteredData = rawGlossaryData;
+
+            // 1. 카테고리 필터링
+            if (filter !== '전체') {
+                filteredData = filteredData.filter(item => item.category === filter);
+            }
+
+            // 2. 검색어 필터링
+            if (searchTerm) {
+                const lowerCaseSearch = searchTerm.toLowerCase();
+                filteredData = filteredData.filter(item => 
+                    item.term.toLowerCase().includes(lowerCaseSearch) || 
+                    item.description.toLowerCase().includes(lowerCaseSearch)
+                );
+            }
+
+            if (filteredData.length === 0) {
+                glossaryContainer.innerHTML = `
+                    <div class="text-center text-gray-500 p-12 bg-white rounded-xl shadow-md">
+                        <svg class="w-10 h-10 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <p class="text-lg">검색 결과가 없습니다.</p>
+                        <p class="text-sm mt-1">다른 검색어로 다시 시도하거나 필터를 초기화해 보세요.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // 카테고리별로 그룹화 (검색 후에도 카테고리별 제목 표시)
+            const grouped = groupDataByCategory(filteredData);
+
+            for (const category in grouped) {
+                // 카테고리 제목
+                const categoryHeader = document.createElement('h2');
+                categoryHeader.className = 'text-2xl font-bold text-gray-800 border-b-2 border-indigo-400 pb-2 mb-4 mt-8 sticky top-[10rem] bg-white pt-2';
+                categoryHeader.textContent = category;
+                glossaryContainer.appendChild(categoryHeader);
+
+                // 용어 항목들
+                const categoryGroup = document.createElement('div');
+                categoryGroup.className = 'grid gap-6 sm:grid-cols-2';
+                
+                grouped[category].forEach(item => {
+                    categoryGroup.innerHTML += createGlossaryItemHTML(item);
+                });
+                
+                glossaryContainer.appendChild(categoryGroup);
+            }
+        }
+
+        // 카테고리 필터 버튼 렌더링 및 이벤트 설정
+        function setupCategoryFilters() {
+            const categories = ['전체', ...new Set(rawGlossaryData.map(item => item.category))];
+            
+            categoryFilters.innerHTML = ''; // '전체' 버튼 포함 초기화
+
+            categories.forEach(category => {
+                const button = document.createElement('button');
+                button.textContent = category;
+                button.dataset.category = category;
+                button.className = 'category-btn px-4 py-2 rounded-full font-medium transition duration-200 shadow-sm whitespace-nowrap';
+                
+                if (category === currentFilter) {
+                    button.classList.add('bg-indigo-600', 'text-white', 'hover:bg-indigo-700');
+                } else {
+                    button.classList.add('bg-gray-200', 'text-gray-700', 'hover:bg-gray-300');
+                }
+
+                button.addEventListener('click', () => {
+                    currentFilter = category;
+                    // 모든 버튼 스타일 초기화
+                    document.querySelectorAll('.category-btn').forEach(btn => {
+                        btn.classList.remove('bg-indigo-600', 'text-white', 'hover:bg-indigo-700');
+                        btn.classList.add('bg-gray-200', 'text-gray-700', 'hover:bg-gray-300');
+                    });
+                    // 선택된 버튼 스타일 적용
+                    button.classList.remove('bg-gray-200', 'text-gray-700', 'hover:bg-gray-300');
+                    button.classList.add('bg-indigo-600', 'text-white', 'hover:bg-indigo-700');
+                    
+                    // 필터링된 결과 렌더링
+                    renderGlossary(currentFilter, searchInput.value);
+                });
+                categoryFilters.appendChild(button);
+            });
+        }
+
+        // 검색 이벤트 리스너 설정
+        searchInput.addEventListener('input', () => {
+            renderGlossary(currentFilter, searchInput.value);
+        });
+
+        // 초기 로딩
+        document.addEventListener('DOMContentLoaded', () => {
+            // 로딩 인디케이터 제거
+            const loadingIndicator = document.getElementById('loading-indicator');
+            if (loadingIndicator) {
+                loadingIndicator.remove();
+            }
+
+            // 카테고리 필터 설정 및 초기 렌더링
+            setupCategoryFilters();
+            renderGlossary(currentFilter);
+        });
+
+    </script>
+</body>
+</html>
