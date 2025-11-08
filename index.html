@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>김소현 학생 금융 포트폴리오</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Inter 폰트를 기본으로 사용 */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f7f9;
+        }
+        /* 스크롤바 숨기기 (선택 사항) */
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none; /* IE and Edge */
+            scrollbar-width: none; /* Firefox */
+        }
+    </style>
+</head>
+<body class="min-h-screen antialiased">
+
+    <!-- 포트폴리오 컨테이너 -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+        <!-- 헤더 및 소개 섹션 -->
+        <header class="text-center mb-16 bg-white p-8 sm:p-12 rounded-2xl shadow-xl border-t-8 border-sky-600">
+            <h1 class="text-3xl sm:text-5xl font-extrabold text-gray-800 tracking-tight mb-2">
+                교과연계형 금융일반 포트폴리오
+            </h1>
+            <p class="text-lg sm:text-xl text-sky-600 font-semibold mb-6">
+                부산대학교 수강 과정 연계 자료
+            </p>
+            <div class="inline-block bg-sky-50 px-6 py-3 rounded-full shadow-inner">
+                <p class="text-md sm:text-lg text-gray-600 font-medium">
+                    부산중앙여자고등학교 1학년 | <span class="text-sky-700 font-bold">김소현</span>
+                </p>
+            </div>
+        </header>
+
+        <!-- 메인 네비게이션/항목 섹션 -->
+        <main class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
+            <!-- 금융용어사전 카드 (링크: dict.html) -->
+            <a href="dict.html" class="group block">
+                <div class="bg-white p-6 sm:p-8 rounded-xl shadow-lg hover:shadow-2xl transition duration-300 transform hover:-translate-y-1 h-full border border-gray-100">
+                    <div class="flex items-center mb-4">
+                        <!-- 📖 책 아이콘 (Lucide Icon Placeholder) -->
+                        <svg class="w-10 h-10 text-sky-600 mr-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.414 9.363 5 8 5a4 4 0 000 8h.02c1.47 0 2.937.414 4 1.253M12 6.253c1.168.839 2.637 1.253 4 1.253a4 4 0 010 8h-.02c-1.47 0-2.937-.414-4-1.253m0-13v13"></path></svg>
+                        <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 group-hover:text-sky-700 transition duration-300">
+                            금융용어사전
+                        </h2>
+                    </div>
+                    <p class="text-gray-600 leading-relaxed">
+                        수업에서 배운 핵심 금융 용어들을 정리하고, 명확한 정의와 함께 예시를 제시하여 이해도를 높입니다. 이 카드를 누르면 상세한 금융용어사전 페이지로 이동합니다.
+                    </p>
+                    <div class="mt-4 text-sm font-semibold text-sky-500 group-hover:text-sky-600">
+                        → 상세 내용 보기 (dict.html)
+                    </div>
+                </div>
+            </a>
+
+            <!-- 교과 핵심정리 카드 (수정된 링크 적용 및 새 탭 열기 유지) -->
+            <a href="https://script.google.com/macros/s/AKfycbxFyOFQ75cqLidwlDd9d_3j6laZVPIbld6JQqAMk5nMtXjgX9PlrhiAK7BOWZZwGFA/exec" class="group block" target="_blank">
+                <div class="bg-white p-6 sm:p-8 rounded-xl shadow-lg hover:shadow-2xl transition duration-300 transform hover:-translate-y-1 h-full border border-gray-100">
+                    <div class="flex items-center mb-4">
+                        <!-- 💡 전구 아이콘 (Lucide Icon Placeholder) -->
+                        <svg class="w-10 h-10 text-sky-600 mr-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 5v1m6.364 1.636l-.707.707M17 12h1M7 12H6M12 18h1m-2-4h2"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10a2 2 0 012 2v1a2 2 0 01-2 2h-1a2 2 0 01-2-2v-1a2 2 0 012-2z"></path></svg>
+                        <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 group-hover:text-sky-700 transition duration-300">
+                            교과 핵심정리
+                        </h2>
+                    </div>
+                    <p class="text-gray-600 leading-relaxed">
+                        부산대 강의에서 다룬 주요 이론 및 주제들을 단원별로 요약합니다. 이 카드를 누르면 외부 자료(Google Script)로 연결됩니다.
+                    </p>
+                    <div class="mt-4 text-sm font-semibold text-sky-500 group-hover:text-sky-600">
+                        → 외부 자료 보기 (새 탭 열림)
+                    </div>
+                </div>
+            </a>
+
+            <!-- 교과 내용 요약 보기 카드 (새로 추가 - 전체 너비) -->
+            <a href="수업자료.pdf" class="group block lg:col-span-2">
+                <div class="bg-white p-6 sm:p-8 rounded-xl shadow-lg hover:shadow-2xl transition duration-300 transform hover:-translate-y-1 h-full border border-gray-100 flex items-center justify-center space-x-4">
+                    <!-- 📎 클립 아이콘 (Lucide Icon Placeholder) -->
+                    <svg class="w-10 h-10 text-sky-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.578 4.646a2.5 2.5 0 102.828 3.536l6.577-4.646m-4.34-4.34a6 6 0 11-8.5 8.5L5.64 15.36M18.36 8.64l4.34-4.34a6 6 0 11-8.5 8.5L15.36 18.36"></path></svg>
+                    <div class="text-center">
+                        <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 group-hover:text-sky-700 transition duration-300">
+                            교과 내용 요약 보기
+                        </h2>
+                        <p class="text-gray-600 leading-relaxed text-sm mt-1">
+                            수업 자료 파일을 다운로드하여 전체 핵심 내용을 확인합니다. (수업자료.pdf)
+                        </p>
+                    </div>
+                    <div class="mt-4 text-sm font-semibold text-sky-500 group-hover:text-sky-600 hidden">
+                        <!-- 추가 텍스트가 필요 없으므로 숨김 -->
+                    </div>
+                </div>
+            </a>
+            
+        </main>
+
+        <!-- 새 섹션: 수업소감 -->
+        <section id="reflection-section" class="mb-16 bg-white p-6 sm:p-10 rounded-xl shadow-lg border-l-4 border-sky-500">
+            <h2 class="text-2xl sm:text-3xl font-bold text-sky-700 mb-6 border-b pb-2">
+                수업소감 (Course Reflection)
+            </h2>
+            <div class="p-4 bg-sky-50 rounded-lg shadow-inner">
+                <p class="text-lg leading-relaxed text-gray-700">
+                    예전부터 금융관련 수업을 들어보고 싶다고 생각했는데 이번 금융일반 수업을 들어보니 생각한 것 보다 훨씬 더 내용이 알차고 다양한 활동을 할 수 있었던 것 같습니다. 처음 해본 코딩도 어렵긴 했지만 재미있고 유익하였던 것 같고 학교에서 탐구해보았던 로보어드바이저 내용이 수업에 나와서 더 지식을 넓게 확장할 수 있었던 것 같습니다. 다음에 또다른 금융관련 수업을 듣게된다면 금융일반 수업을 기억하며 겁먹지 않고 즐겁게 수업을 들을 수 있을 것 같습니다.
+                </p>
+            </div>
+            <a href="#top" class="mt-8 inline-block text-sky-600 hover:text-sky-800 transition duration-150 text-sm font-medium">
+                ^ 페이지 맨 위로 이동
+            </a>
+        </section>
+
+        <!-- 푸터 -->
+        <footer class="text-center text-gray-500 text-sm mt-12 pt-8 border-t border-gray-300">
+            <p>&copy; 2025 김소현 학생 포트폴리오 | 교과연계형 금융일반 | 부산대학교 & 부산중앙여자고등학교</p>
+        </footer>
+
+    </div>
+</body>
+</html>
